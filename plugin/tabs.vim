@@ -1,8 +1,14 @@
 scriptencoding utf-8
 
-" let s:glyphs = [['', '', 0], ['', '', 1]]
-let s:glyphs = [['', '', 0], ['', '', 1]]
-" let s:glyphs = [['', '', 0], ['', '', 1]]
+if ( !exists("g:c98tabbar_style") ) || ( g:c98tabbar_style == 0 )
+  let s:glyphs = [['', '', 0], ['', '', 1]]
+else
+  if g:c98tabbar_style == 1
+    let s:glyphs = [['', '', 0], ['', '', 1]]
+  else
+    let s:glyphs = [['', '', 0], ['', '', 1]]
+  endif
+endif
 let s:colors = {
 	\ 'null': ['black', 'none', 0],
 	\ 'inactive': ['darkgray', 'lightgray', 'black'],
@@ -45,7 +51,11 @@ function! C98TabLine()
 	endfor
 	let l:s .= s:separator(tabpagenr('$')+1, l:lastColor, 'null')
 
-	let l:s .= '%#TabLineFill#'
+  if exists("g:c98tabbar_additional_callback")
+    execute('let l:s .= '.g:c98tabbar_additional_callback.'()')
+  else
+    let l:s .= "%#TabLineFill#"
+  endif
 	return l:s
 endfunction
 
@@ -138,5 +148,12 @@ function! s:init()
 endfunction
 call s:init()
 delf s:init
+
+if exists("g:c98tabbar_redraw")
+  function! C98TabBarRedraw(timer)
+    let &ro=&ro
+  endfunction
+  let timer = timer_start(30000, 'C98TabBarRedraw', {"repeat": -1})
+endif
 
 set tabline=%!C98TabLine()
