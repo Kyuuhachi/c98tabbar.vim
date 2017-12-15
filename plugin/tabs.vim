@@ -55,7 +55,7 @@ function! C98TabLine()
 	endfor
 	let l:s .= s:separator(tabpagenr('$')+1, l:lastColor, 'null')
 
-	let l:s .= '%#TabLineFill#'
+	let l:s .= '%#TabLinenull'
 	return l:s
 endfunction
 
@@ -130,7 +130,7 @@ augroup END
 function! s:init_colors()
 	for l:a in keys(s:colors)
 		for l:b in keys(s:colors)
-			if l:a == l:b
+			if s:colors[l:a][0] == s:colors[l:b][0]
 				exec 'hi TabLineSep'.l:a.b.' ctermbg='.s:colors[l:a][0].' ctermfg='.s:colors[l:a][2]
 			else
 				exec 'hi TabLineSep'.l:a.b.' ctermbg='.s:colors[l:a][0].' ctermfg='.s:colors[l:b][0]
