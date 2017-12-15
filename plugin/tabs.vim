@@ -143,7 +143,7 @@ augroup C98TabIndex
 	au TabEnter * let s:focus_index += 1
 augroup END
 
-function! s:init()
+function! s:init_colors()
 	for l:a in keys(s:colors)
 		for l:b in keys(s:colors)
 			if l:a == l:b
@@ -154,7 +154,14 @@ function! s:init()
 		endfor
 		exec 'hi TabLine'.l:a.' ctermbg='.s:colors[l:a][0].' ctermfg='.s:colors[l:a][1]
 	endfor
+endfunction
+augroup C98TabColor
+	au!
+	au ColorScheme * call s:init_colors()
+augroup END
 
+function! s:init()
+	call s:init_colors()
 	for l:n in range(tabpagenr('$'), 0, -1)
 		call settabvar(l:n, 'focus_index', s:focus_index)
 		let s:focus_index += 1
