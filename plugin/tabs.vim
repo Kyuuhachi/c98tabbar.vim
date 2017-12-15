@@ -1,5 +1,6 @@
 scriptencoding utf-8
 
+<<<<<<< HEAD
 if ( !exists("g:c98tabbar_style") ) || ( g:c98tabbar_style == 0 )
   let s:glyphs = [['', '', 0], ['', '', 1]]
 else
@@ -9,6 +10,20 @@ else
     let s:glyphs = [['', '', 0], ['', '', 1]]
   endif
 endif
+=======
+let s:glyph_theme = get(g:, 'c98tabbar_theme', 'top')
+let s:glyph_themes = {
+	\ 'top': [['', '', 0], ['', '', 1]],
+	\ 'mid': [['', '', 0], ['', '', 1]],
+	\ 'bot': [['', '', 0], ['', '', 1]],
+	\ }
+if type(s:glyph_theme) == v:t_list
+	let s:glyphs = s:glyph_theme
+else
+	let s:glyphs = get(s:glyph_themes, s:glyph_theme)
+endif
+
+>>>>>>> 77f6893... Make colors and glyphs configurable
 let s:colors = {
 	\ 'null': ['black', 'none', 0],
 	\ 'inactive': ['darkgray', 'lightgray', 'black'],
@@ -18,6 +33,7 @@ let s:colors = {
 	\ 'inactive_ro': ['darkred', 'lightred', 'black'],
 	\ 'active_ro': ['lightred', 'darkred', 0],
 	\ }
+let s:colors = extend(s:colors, get(g:, 'c98tabbar_colors', {}))
 
 function! C98TabLine()
 	let l:s = ''
