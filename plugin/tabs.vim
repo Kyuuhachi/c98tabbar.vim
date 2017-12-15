@@ -1,16 +1,5 @@
 scriptencoding utf-8
 
-<<<<<<< HEAD
-if ( !exists("g:c98tabbar_style") ) || ( g:c98tabbar_style == 0 )
-  let s:glyphs = [['', '', 0], ['', '', 1]]
-else
-  if g:c98tabbar_style == 1
-    let s:glyphs = [['', '', 0], ['', '', 1]]
-  else
-    let s:glyphs = [['', '', 0], ['', '', 1]]
-  endif
-endif
-=======
 let s:glyph_theme = get(g:, 'c98tabbar_theme', 'top')
 let s:glyph_themes = {
 	\ 'top': [['', '', 0], ['', '', 1]],
@@ -23,7 +12,6 @@ else
 	let s:glyphs = get(s:glyph_themes, s:glyph_theme)
 endif
 
->>>>>>> 77f6893... Make colors and glyphs configurable
 let s:colors = {
 	\ 'null': ['black', 'none', 0],
 	\ 'inactive': ['darkgray', 'lightgray', 'black'],
@@ -70,7 +58,7 @@ function! C98TabLine()
   if exists("g:c98tabbar_additional_callback")
     execute('let l:s .= '.g:c98tabbar_additional_callback.'()')
   else
-    let l:s .= "%#TabLineFill#"
+    let l:s .= '%#TabLinenull'
   endif
 	return l:s
 endfunction
@@ -146,7 +134,7 @@ augroup END
 function! s:init_colors()
 	for l:a in keys(s:colors)
 		for l:b in keys(s:colors)
-			if l:a == l:b
+			if s:colors[l:a][0] == s:colors[l:b][0]
 				exec 'hi TabLineSep'.l:a.b.' ctermbg='.s:colors[l:a][0].' ctermfg='.s:colors[l:a][2]
 			else
 				exec 'hi TabLineSep'.l:a.b.' ctermbg='.s:colors[l:a][0].' ctermfg='.s:colors[l:b][0]
