@@ -55,7 +55,11 @@ function! C98TabLine()
 	endfor
 	let l:s .= s:separator(tabpagenr('$')+1, l:lastColor, 'null')
 
-	let l:s .= '%#TabLinenull'
+	if exists("g:c98tabbar_additional_callback")
+		execute('let l:s .= '.g:c98tabbar_additional_callback.'()')
+	else
+		let l:s .= '%#TabLinenull'
+	endif
 	return l:s
 endfunction
 
@@ -155,5 +159,12 @@ function! s:init()
 endfunction
 call s:init()
 delf s:init
+
+if exists("g:c98tabbar_redraw")
+	function! C98TabBarRedraw(timer)
+		let &ro=&ro
+	endfunction
+	let timer = timer_start(30000, 'C98TabBarRedraw', {"repeat": -1})
+endif
 
 set tabline=%!C98TabLine()
