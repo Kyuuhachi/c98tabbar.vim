@@ -1,8 +1,17 @@
 scriptencoding utf-8
 
-" let s:glyphs = [['', '', 0], ['', '', 1]]
-let s:glyphs = [['', '', 0], ['', '', 1]]
-" let s:glyphs = [['', '', 0], ['', '', 1]]
+let s:glyph_theme = get(g:, 'c98tabbar_theme', 'top')
+let s:glyph_themes = {
+	\ 'top': [['', '', 0], ['', '', 1]],
+	\ 'mid': [['', '', 0], ['', '', 1]],
+	\ 'bot': [['', '', 0], ['', '', 1]],
+	\ }
+if type(s:glyph_theme) == v:t_list
+	let s:glyphs = s:glyph_theme
+else
+	let s:glyphs = get(s:glyph_themes, s:glyph_theme)
+endif
+
 let s:colors = {
 	\ 'null': ['black', 'none', 0],
 	\ 'inactive': ['darkgray', 'lightgray', 'black'],
@@ -12,6 +21,7 @@ let s:colors = {
 	\ 'inactive_ro': ['darkred', 'lightred', 'black'],
 	\ 'active_ro': ['lightred', 'darkred', 0],
 	\ }
+let s:colors = extend(s:colors, get(g:, 'c98tabbar_colors', {}))
 
 function! C98TabLine()
 	let l:s = ''
