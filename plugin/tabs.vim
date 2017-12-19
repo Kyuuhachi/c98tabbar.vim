@@ -55,7 +55,7 @@ function! C98TabLine()
 	endfor
 	let l:s .= s:separator(tabpagenr('$')+1, l:lastColor, 'null')
 
-	let l:s .= '%#TabLinenull'
+	let l:s .= '%#TabLinenull#'
 	return l:s
 endfunction
 
