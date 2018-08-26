@@ -100,24 +100,36 @@ function! s:tab_label(n)
 	endif
 endfunction
 
-function! s:relativize(path, where)
 python3 << EOF
-import vim, os.path
-def shorten(a):
-	if "/" in a:
-		a = a.split("/")
-		return "/".join(b[:1] if b != ".." else b for b in a[:-1]) + "/" + a[-1]
-	return a
-path = vim.eval("fnamemodify(a:path, ':~')")
-where = vim.eval("fnamemodify(a:where, ':~')")
 
-rel = os.path.relpath(path, where)
-roots = ["", os.path.expanduser("~/"), "/usr/share/", "/usr/lib/", "/usr/", "/etc/"]
-if os.path.commonprefix([path, where]) in roots or rel.startswith("../../../../"):
-	vim.command("return %r" % shorten(path))
-else:
-	vim.command("return %r" % shorten(rel))
+def c98tabs_seg(name):
+	if name == "..":
+		return ".."
+	return name[:1]
+
+def c98tabs_compress(name):
+	parts = name.split("/")
+	parts[:-1] = map(c98tabs_seg, parts[:-1])
+	return "/".join(parts)
+
+def c98tabs_shorten(path, where):
+	import os.path
+	rel = os.path.relpath(path, where)
+
+	roots = ["", "~/", "/usr/share/", "/usr/lib/", "/usr/", "/etc/"]
+	if os.path.commonprefix([path, where]) in roots or rel.startswith("../../../../"):
+		rel = path
+
+	return c98tabs_compress(rel)
+
+def c98tabs_shorten_vim():
+	import vim
+	path = vim.eval("fnamemodify(a:path, ':~')")
+	where = vim.eval("fnamemodify(a:where, ':~')")
+	return c98tabs_shorten(path, where)
 EOF
+function! s:relativize(path, where)
+	return py3eval("c98tabs_shorten_vim()")
 endfunction
 
 let s:focus_index = 0
